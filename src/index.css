@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.banner {
+    background: url( 'C:\Users\sahel\OneDrive\Documents\Love Home Conveyancing\Love_Home_Conveyancing\Admin\admin_panel\src\assets\banner2.webp' );
+    background-repeat: no-repeat;
+    
+    background-size: cover        
+}
+#backgroundform{
+    background: #f0532d;
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+backdrop-filter: blur( 7px );
+-webkit-backdrop-filter: blur( 7px );
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+}

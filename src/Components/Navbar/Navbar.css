@@ -1,0 +1,8 @@
+#profile{
+    font-size: 10rem;
+    transition: transform 0.5s ease-in-out;
+}
+
+#profile:hover{
+    transform: scale(1.1);
+}
