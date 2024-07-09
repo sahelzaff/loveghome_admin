@@ -24,7 +24,7 @@ const App = () => {
 
   const fetchLeads = async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/form/leads');
+      const response = await fetch('https://lovehomeconvyancing-backend.onrender.com/api/form/leads');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
