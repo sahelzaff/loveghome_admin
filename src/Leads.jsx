@@ -37,7 +37,7 @@ const Leads = ({ leads, refreshData }) => {
   const confirmDelete = async () => {
     if (selectedLead) {
       try {
-        const response = await fetch(`https://lovehomeconvyancing-backend.onrender.com/api/leads/${selectedLead._id}`, {
+        const response = await fetch(`https://lovehomeconvyancingbackend-production.up.railway.app/api/leads/${selectedLead._id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',

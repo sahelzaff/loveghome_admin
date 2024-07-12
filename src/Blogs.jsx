@@ -21,7 +21,7 @@ const Blogs = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await fetch('https://lovehomeconvyancing-backend.onrender.com/api/blogs');
+      const response = await fetch('https://lovehomeconvyancingbackend-production.up.railway.app/api/blogs');
       if (!response.ok) {
         throw new Error('Failed to fetch blogs');
       }
@@ -76,7 +76,7 @@ const Blogs = () => {
     formDataToSend.append('blogCoverPhoto', formData.blogCoverPhoto);
   
     try {
-      const response = await fetch('https://lovehomeconvyancing-backend.onrender.com/api/blogs', {
+      const response = await fetch('https://lovehomeconvyancingbackend-production.up.railway.app/api/blogs', {
         method: 'POST',
         body: formDataToSend
       });
@@ -139,7 +139,7 @@ const Blogs = () => {
                 <tr key={index} className="text-black border-b border-gray-300 cursor-pointer hover:bg-gray-200">
                   <td className="py-3 px-6 text-left">{blog.blogId}</td>
                   <td className="py-3 px-6 text-left">
-                    <img src={`https://lovehomeconvyancing-backend.onrender.com/${blog.blogCoverPhoto}`} alt="Blog Cover" className="h-16 w-auto object-cover" />
+                    <img src={`https://lovehomeconvyancingbackend-production.up.railway.app/${blog.blogCoverPhoto}`} alt="Blog Cover" className="h-16 w-auto object-cover" />
                   </td>
                   <td className="py-3 px-6 text-left">{blog.blogTitle}</td>
                   <td className="py-3 px-6 text-left">{blog.blogDate}</td>

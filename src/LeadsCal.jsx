@@ -22,7 +22,7 @@ const LeadsCal = () => {
 
   const fetchLeads = async () => {
     try {
-      const response = await fetch('https://lovehomeconvyancing-backend.onrender.com/api/lead-cal');
+      const response = await fetch('https://lovehomeconvyancingbackend-production.up.railway.app/api/lead-cal');
       const data = await response.json();
       setLeads(data);
     } catch (error) {
@@ -58,7 +58,7 @@ const LeadsCal = () => {
   const confirmDelete = async () => {
     if (selectedLead) {
       try {
-        const response = await fetch(`https://lovehomeconvyancing-backend.onrender.com/api/lead-cal/${selectedLead._id}`, {
+        const response = await fetch(`https://lovehomeconvyancingbackend-production.up.railway.app/api/lead-cal/${selectedLead._id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
