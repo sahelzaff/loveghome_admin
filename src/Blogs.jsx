@@ -29,6 +29,33 @@ const Blogs = () => {
       setBlogEntries(data);
     } catch (error) {
       console.error('Error fetching blogs:', error);
+      toast.error('Failed to fetch blogs');
+    }
+  };
+
+  const handleDelete = async (blogId) => {
+    // Show confirmation dialog
+    if (!window.confirm('Are you sure you want to delete this blog post?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://lovehomeconvyancingbackend-production.up.railway.app/api/blogs/${blogId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete blog');
+      }
+
+      // Remove the deleted blog from the state
+      setBlogEntries(blogEntries.filter(blog => blog._id !== blogId));
+      
+      // Show success message
+      toast.success('Blog deleted successfully');
+    } catch (error) {
+      console.error('Error deleting blog:', error);
+      toast.error('Failed to delete blog');
     }
   };
 
@@ -67,29 +94,43 @@ const Blogs = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    const formDataToSend = new FormData();
-    formDataToSend.append('blogId', formData.blogId);
-    formDataToSend.append('blogTitle', formData.blogTitle);
-    formDataToSend.append('blogDate', formData.blogDate);
-    formDataToSend.append('blogContent', formData.blogContent);
-    formDataToSend.append('blogCoverPhoto', formData.blogCoverPhoto);
-  
+    
     try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('blogId', formData.blogId);
+      formDataToSend.append('blogTitle', formData.blogTitle);
+      formDataToSend.append('blogDate', formData.blogDate);
+      formDataToSend.append('blogContent', formData.blogContent);
+      
+      // Only append file if it exists
+      if (formData.blogCoverPhoto) {
+        console.log('Appending file:', formData.blogCoverPhoto.name);
+        formDataToSend.append('blogCoverPhoto', formData.blogCoverPhoto);
+      }
+
+      console.log('Submitting blog with data:', {
+        blogId: formData.blogId,
+        blogTitle: formData.blogTitle,
+        blogDate: formData.blogDate,
+        hasImage: !!formData.blogCoverPhoto
+      });
+
       const response = await fetch('https://lovehomeconvyancingbackend-production.up.railway.app/api/blogs', {
         method: 'POST',
-        body: formDataToSend
+        body: formDataToSend, // Don't set Content-Type header, let browser set it with boundary
       });
-  
+
       if (!response.ok) {
-        throw new Error('Failed to add new blog');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create blog');
       }
-  
+
       const newBlogEntry = await response.json();
-  
+      console.log('Blog created successfully:', newBlogEntry);
+
       // Update blogEntries state to include the new entry
       setBlogEntries([...blogEntries, newBlogEntry]);
-  
+
       // Clear form data after submission
       setFormData({
         blogId: '',
@@ -99,18 +140,12 @@ const Blogs = () => {
         blogCoverPhoto: null,
         previewImage: ''
       });
-  
+
       // Show success toast
-      toast.success('Blog Successfully Created', {
-        position: toast.POSITION.TOP_RIGHT
-      });
+      toast.success('Blog Successfully Created');
     } catch (error) {
-      console.error('Error adding new blog:', error);
-  
-      // Show error toast
-      toast.error('An error occurred. Please try again.', {
-        position: toast.POSITION.TOP_RIGHT
-      });
+      console.error('Error creating blog:', error);
+      toast.error(error.message || 'Failed to create blog');
     }
   };
 
@@ -139,12 +174,31 @@ const Blogs = () => {
                 <tr key={index} className="text-black border-b border-gray-300 cursor-pointer hover:bg-gray-200">
                   <td className="py-3 px-6 text-left">{blog.blogId}</td>
                   <td className="py-3 px-6 text-left">
-                    <img src={`https://lovehomeconvyancingbackend-production.up.railway.app/${blog.blogCoverPhoto}`} alt="Blog Cover" className="h-16 w-auto object-cover" />
+                    {blog.blogCoverPhoto ? (
+                      <img 
+                        src={blog.blogCoverPhoto} 
+                        alt="Blog Cover" 
+                        className="h-16 w-24 object-cover rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                        onError={(e) => {
+                          console.error('Image failed to load:', blog.blogCoverPhoto);
+                          e.target.src = 'https://via.placeholder.com/150?text=No+Image';
+                        }}
+                      />
+                    ) : (
+                      <div className="h-16 w-24 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 text-sm">
+                        No Image
+                      </div>
+                    )}
                   </td>
                   <td className="py-3 px-6 text-left">{blog.blogTitle}</td>
                   <td className="py-3 px-6 text-left">{blog.blogDate}</td>
                   <td className="py-3 px-6 text-left">
-                    <button className="text-red-500 hover:text-red-700">Delete</button>
+                    <button 
+                      onClick={() => handleDelete(blog._id)}
+                      className="text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition-colors duration-200"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -216,7 +270,7 @@ const Blogs = () => {
           <div className="mb-4">
             <label htmlFor="blogContent" className="block text-sm font-medium text-gray-700">Content:</label>
             <Editor
-              apiKey='6i4ekg4ip08hajw6dak9q9oh36eao9k836fww7kmte9glc7a'
+              apiKey='csppoe5r4gng080o0udrfh18048w48yhz07wp2eyf5gila7u'
               value={formData.blogContent}
               onEditorChange={handleEditorChange}
               init={{
